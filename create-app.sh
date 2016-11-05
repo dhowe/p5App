@@ -7,6 +7,7 @@
 # 5. test the exported application
 
 PROJECT_BIN=${1:-~/Documents/Projects/RELC3/bin}
+PROJECT_ICON=${2:-~/Documents/Projects/RELC3/sketch.icns}
 
 mkdir tmp
 
