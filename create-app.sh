@@ -1,13 +1,13 @@
 #!/bin/sh
 
 # 1. run your program in eclipse
-# 2. run this script: ./create-app.sh
+# 2. run this script: ./create-app.sh [optional-path-to-eclipse-bin]
 # 3. run the AppRunner/AppRunner.pde sketch in this directory from Processing
 # 4. choose file->'export application' from Processing menu
 # 5. test the exported application
 
 PROJECT_BIN=${1:-~/Documents/Projects/RELC3/bin}
-PROJECT_ICON=${2:-~/Documents/Projects/RELC3/sketch.icns}
+#PROJECT_ICON=${2:-"~/Documents/Projects/RELC3/sketch.icns"}
 
 mkdir tmp
 
