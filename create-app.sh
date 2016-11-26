@@ -14,41 +14,47 @@ fi
 
 MAIN_CLASS=${1}
 PROJECT_HOME=${2}
-PROJECT_BIN=${PROJECT_HOME}/bin
 JARS_DIR=${3:-${PROJECT_HOME}/lib}
+
+APPNAME="${MAIN_CLASS#*.}"
+PROJECT_BIN=${PROJECT_HOME}/bin
+PROCESSING_JAVA=processing-java
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+
+echo Creating ${APPNAME}
 
 # set things up
 rm -rf tmp
 mkdir tmp
-rm -rf AppRunner
-mkdir AppRunner
-mkdir AppRunner/code
+rm -rf ${APPNAME}
+mkdir ${APPNAME}
+mkdir ${APPNAME}/code
 
  # generate the .pde file from template
-cat template.pde | sed -e "s/%MAIN_CLASS%/${MAIN_CLASS}/" > AppRunner/Apprunner.pde
+cat template.pde | sed -e "s/%MAIN_CLASS%/${MAIN_CLASS}/" > ${APPNAME}/${APPNAME}.pde
 
 # copy in the classes
 cp -r ${PROJECT_BIN}/* tmp/
 
 # and create a jar in code folder
-cd tmp && jar cf ../AppRunner/code/app.jar * && cd -
+cd tmp && jar cf ../${APPNAME}/code/app.jar * && cd -
 
 # copy rest of jars from eclipse folder
-cp -r $JARS_DIR/*.jar AppRunner/code/
+cp -r $JARS_DIR/*.jar ${APPNAME}/code/
 
 # clean things up before export
-rm -rf AppRunner/code/core.jar # core.jar not needed in p5
-rm -rf  AppRunner/application.* # only exists if run repeatedly
+rm -rf ${APPNAME}/code/core.jar # core.jar not needed in p5
+rm -rf  ${APPNAME}/application.* # only exists if run repeatedly
 rm -rf /Users/$USER/.Trash/application.* # remove from trash as will cause an error
 
 # lets do the export
-processing-java --sketch=${DIR}/AppRunner --force --export > AppRunner.log 2>&1
+$PROCESSING_JAVA --sketch=${DIR}/${APPNAME} --force --export > ${APPNAME}.log 2>&1
 
 # now, copy any natives from eclipse folder
-cp -r $PROJECT_HOME/*.jnilib AppRunner/application.macosx/AppRunner.app/Contents/Java
+cp -r $PROJECT_HOME/*.jnilib ${APPNAME}/application.macosx/${APPNAME}.app/Contents/Java
 
 # remove our garbage and open the folder
 rm -rf tmp
 echo done
-open ./AppRunner
+open ./${APPNAME}
