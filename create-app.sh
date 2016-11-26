@@ -21,8 +21,7 @@ PROJECT_BIN=${PROJECT_HOME}/bin
 PROCESSING_JAVA=processing-java
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-
-echo Creating ${APPNAME}
+echo Creating ${APPNAME} ...
 
 # set things up
 rm -rf tmp
@@ -43,10 +42,8 @@ cd tmp && jar cf ../${APPNAME}/code/app.jar * && cd -
 # copy rest of jars from eclipse folder
 cp -r $JARS_DIR/*.jar ${APPNAME}/code/
 
-# clean things up before export
-rm -rf ${APPNAME}/code/core.jar # core.jar not needed in p5
-rm -rf  ${APPNAME}/application.* # only exists if run repeatedly
-rm -rf /Users/$USER/.Trash/application.* # remove from trash as will cause an error
+# core.jar not needed in p5
+rm -rf ${APPNAME}/code/core.jar
 
 # lets do the export
 $PROCESSING_JAVA --sketch=${DIR}/${APPNAME} --force --export > ${APPNAME}.log 2>&1
@@ -54,7 +51,11 @@ $PROCESSING_JAVA --sketch=${DIR}/${APPNAME} --force --export > ${APPNAME}.log 2>
 # now, copy any natives from eclipse folder
 cp -r $PROJECT_HOME/*.jnilib ${APPNAME}/application.macosx/${APPNAME}.app/Contents/Java
 
+# remove this if not supplying your own core.XYZ.jar
+rm -rf ${APPNAME}/application.macosx/${APPNAME}.app/Contents/Java/core.jar # use our 1.2 instead
+
 # remove our garbage and open the folder
 rm -rf tmp
-echo done
+echo done.
+
 open ./${APPNAME}
